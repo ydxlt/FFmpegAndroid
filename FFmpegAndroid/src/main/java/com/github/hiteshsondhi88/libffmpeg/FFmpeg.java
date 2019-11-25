@@ -3,11 +3,11 @@ package com.github.hiteshsondhi88.libffmpeg;
 import android.content.Context;
 import android.text.TextUtils;
 
-import java.lang.reflect.Array;
-import java.util.Map;
-
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+
+import java.lang.reflect.Array;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class FFmpeg implements FFmpegInterface {
@@ -20,6 +20,7 @@ public class FFmpeg implements FFmpegInterface {
     private long timeout = Long.MAX_VALUE;
 
     private static FFmpeg instance = null;
+    private FFmpegLibraryHelper mFFmpegLibraryHelper;
 
     private FFmpeg(Context context) {
         this.context = context.getApplicationContext();
@@ -31,6 +32,10 @@ public class FFmpeg implements FFmpegInterface {
             instance = new FFmpeg(context);
         }
         return instance;
+    }
+
+    public void setFFmpegLibraryHelper(FFmpegLibraryHelper FFmpegLibraryHelper) {
+        mFFmpegLibraryHelper = FFmpegLibraryHelper;
     }
 
     @Override
@@ -50,7 +55,7 @@ public class FFmpeg implements FFmpegInterface {
         }
 
         if (!TextUtils.isEmpty(cpuArchNameFromAssets)) {
-            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler);
+            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context,mFFmpegLibraryHelper,cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler);
             ffmpegLoadLibraryAsyncTask.execute();
         } else {
             throw new FFmpegNotSupportedException("Device not supported");

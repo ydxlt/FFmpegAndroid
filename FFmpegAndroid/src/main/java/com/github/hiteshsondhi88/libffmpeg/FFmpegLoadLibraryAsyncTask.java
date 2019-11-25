@@ -7,12 +7,14 @@ import java.io.File;
 
 class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
+    private FFmpegLibraryHelper mFFmpegLibraryHelper;
     private final String cpuArchNameFromAssets;
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
     private final Context context;
 
-    FFmpegLoadLibraryAsyncTask(Context context, String cpuArchNameFromAssets, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) {
+    FFmpegLoadLibraryAsyncTask(Context context, FFmpegLibraryHelper FFmpegLibraryHelper, String cpuArchNameFromAssets, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) {
         this.context = context;
+        mFFmpegLibraryHelper = FFmpegLibraryHelper;
         this.cpuArchNameFromAssets = cpuArchNameFromAssets;
         this.ffmpegLoadBinaryResponseHandler = ffmpegLoadBinaryResponseHandler;
     }
@@ -24,10 +26,13 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Boolean> {
             return false;
         }
         if (!ffmpegFile.exists()) {
-            boolean isFileCopied = FileUtils.copyBinaryFromAssetsToData(context,
-                    cpuArchNameFromAssets + File.separator + FileUtils.ffmpegFileName,
-                    FileUtils.ffmpegFileName);
-
+//            boolean isFileCopied = FileUtils.copyBinaryFromAssetsToData(context,
+//                    cpuArchNameFromAssets + File.separator + FileUtils.ffmpegFileName,
+//                    FileUtils.ffmpegFileName);
+            if(mFFmpegLibraryHelper == null){
+                throw new IllegalArgumentException("FFmpegLibraryHelper must be not null!");
+            }
+            boolean isFileCopied = mFFmpegLibraryHelper.prepareFFmpegResource(cpuArchNameFromAssets,cpuArchNameFromAssets + File.separator + FileUtils.ffmpegFileName);
             // make file executable
             if (isFileCopied) {
                 if(!ffmpegFile.canExecute()) {

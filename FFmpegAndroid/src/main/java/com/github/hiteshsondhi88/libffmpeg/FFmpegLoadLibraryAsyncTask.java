@@ -32,7 +32,7 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Boolean> {
             if(mFFmpegLibraryHelper == null){
                 throw new IllegalArgumentException("FFmpegLibraryHelper must be not null!");
             }
-            boolean isFileCopied = mFFmpegLibraryHelper.prepareFFmpegResource(cpuArchNameFromAssets,cpuArchNameFromAssets + File.separator + FileUtils.ffmpegFileName);
+            boolean isFileCopied = mFFmpegLibraryHelper.prepareFFmpegResource(cpuArchNameFromAssets,FileUtils.ffmpegFileName);
             // make file executable
             if (isFileCopied) {
                 if(!ffmpegFile.canExecute()) {

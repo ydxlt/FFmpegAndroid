@@ -22,47 +22,6 @@ class FileUtils {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
     private static final int EOF = -1;
 
-    static boolean downloadBinaryToData(Context context,String url,String outputFileName){
-        // create files directory under /data/data/package name
-        File filesDirectory = getFilesDirectory(context);
-        try{
-            //获取文件名
-            URL myURL = new URL(url);
-            URLConnection conn = myURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            int fileSize = conn.getContentLength();//根据响应获取文件大小
-            if (fileSize <= 0) throw new RuntimeException("无法获知文件大小 ");
-            if (is == null) throw new RuntimeException("stream is null");
-            File targetFile = new File(filesDirectory, outputFileName);
-            if(!targetFile.exists()){
-                targetFile.mkdirs();
-            }
-            //把数据存入路径+文件名
-            final FileOutputStream fos = new FileOutputStream(targetFile);
-            byte buf[] = new byte[1024];
-            int downLoadFileSize = 0;
-            do{
-                //循环读取
-                int numread = is.read(buf);
-                if (numread == -1)
-                {
-                    break;
-                }
-                fos.write(buf, 0, numread);
-                downLoadFileSize += numread;
-                //更新进度条
-            } while (true);
-
-            Log.i("DOWNLOAD download success");
-            is.close();
-            return true;
-        } catch (Exception ex) {
-            Log.e("DOWNLOAD error: " + ex.getMessage());
-        }
-        return false;
-    }
-
     static boolean copyBinaryFromAssetsToData(Context context, String fileNameFromAssets, String outputFileName) {
 		
 		// create files directory under /data/data/package name
